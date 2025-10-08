@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Indigenous Art Atlas - Home</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="page-container">
+        <header class="main-header">
+            <div class="container">
+                <a href="index.html" class="logo">LOGO</a>
+                <nav class="main-nav">
+                    <a href="index.html">Home</a>
+                    <a href="#">Usage Guidelines</a>
+                    <a href="#">Contact</a>
+                    <a href="collection.html">Art</a>
+                    <a href="#">About us</a>
+                    <span id="auth-links">
+                        <a href="login.html">Signin/Signup</a>
+                    </span>
+                </nav>
+                <button class="btn btn-secondary">Search</button>
+            </div>
+        </header>
+
+        <main class="flex-grow">
+            <div class="container page-content">
+                <section class="hero-section">
+                    <div class="hero-text">
+                        <h1 class="hero-title">Indigenous Art Atlas</h1>
+                        <p class="hero-description">Discover and explore the rich heritage of indigenous art from around the world. Our digital atlas preserves and shares cultural treasures for future generations.</p>
+                    </div>
+                    <div class="hero-image-container">
+                        <img src="https://picsum.photos/seed/home/800/450" alt="Featured Art" class="hero-image"/>
+                    </div>
+                </section>
+
+                <section class="map-section">
+                    <h2 class="section-title">Explore On Map</h2>
+                    <div class="map-placeholder">Interactive Map Coming Soon</div>
+                </section>
+
+                <section>
+                    <h2 class="section-title">Latest Collection</h2>
+                    <div class="art-grid" id="latest-artworks">
+                        <div class="loading-message">Loading latest artworks...</div>
+                    </div>
+                    <div class="text-center mt-12">
+                        <a href="collection.html" class="btn btn-secondary btn-icon">
+                            <span>View More</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                        </a>
+                    </div>
+                </section>
+            </div>
+        </main>
+        
+        <footer class="main-footer">
+            <div class="container">
+                <div><h2 class="footer-title">Indigenous Art Atlas</h2></div>
+                <div class="footer-links">
+                  <h3 class="footer-links-title">Links</h3>
+                  <a href="#">About Us</a>
+                  <a href="#">Usage Guideline</a>
+                  <a href="#">Contact</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>

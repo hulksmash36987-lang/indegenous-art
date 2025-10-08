@@ -1,0 +1,72 @@
+[
+    {
+        "token": "c2e94d48d3516eac432b2c4e930eaddd7b2f2815dc12fa2ea58885ffe04ccdf5",
+        "user": {
+            "id": 1,
+            "username": "admin",
+            "email": "admin@example.com",
+            "password": "admin123",
+            "account_type": "Admin",
+            "role": "admin",
+            "status": "active",
+            "created_at": "2025-01-01 10:00:00"
+        },
+        "expires": 1759941929
+    },
+    {
+        "token": "7bc8b75b4f1bda918e504e5487cb0e1b1e3b6be6366482760f1f667ba39eef41",
+        "user": {
+            "id": 1,
+            "username": "admin",
+            "email": "admin@example.com",
+            "password": "admin123",
+            "account_type": "Admin",
+            "role": "admin",
+            "status": "active",
+            "created_at": "2025-01-01 10:00:00"
+        },
+        "expires": 1759944304
+    },
+    {
+        "token": "970d221bf76faf4bfc0cfdde0a7298d63554a540c1c677ad2ef3131224639be2",
+        "user": {
+            "id": 2,
+            "username": "marco",
+            "email": "marco@example.com",
+            "password": "pass123",
+            "account_type": "Artist",
+            "role": "artist",
+            "status": "active",
+            "created_at": "2025-01-02 11:00:00"
+        },
+        "expires": 1759944908
+    },
+    {
+        "token": "87866caca22ada093f10a3255b2a71e7620f0476a0e9702653e449feb0ff752d",
+        "user": {
+            "id": 1,
+            "username": "admin",
+            "email": "admin@example.com",
+            "password": "admin123",
+            "account_type": "Admin",
+            "role": "admin",
+            "status": "active",
+            "created_at": "2025-01-01 10:00:00"
+        },
+        "expires": 1760014549
+    },
+    {
+        "token": "4ae071d22b85b0da2e951446aeb338b3c9e39dd25a62f87cee435b0565a4e09d",
+        "user": {
+            "id": 2,
+            "username": "marco",
+            "email": "marco@example.com",
+            "password": "pass123",
+            "account_type": "Artist",
+            "role": "artist",
+            "status": "active",
+            "created_at": "2025-01-02 11:00:00"
+        },
+        "expires": 1760014628
+    }
+]

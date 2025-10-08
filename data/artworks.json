@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "title": "Ancient Rock Painting",
+    "type": "Rock Art",
+    "description": "A beautiful rock painting depicting traditional hunting scenes",
+    "artist_name": "Unknown",
+    "period": "Ancient",
+    "location": "-34.9285,138.6007",
+    "location_notes": "South Australia",
+    "location_sensitive": false,
+    "condition_note": "Well preserved",
+    "image_url": "https://picsum.photos/seed/art1/800/600",
+    "user_id": 2,
+    "status": "approved",
+    "created_at": "2025-01-05 14:00:00"
+  },
+  {
+    "id": 2,
+    "title": "Traditional Pottery Bowl",
+    "type": "Pottery",
+    "description": "Hand-crafted pottery with intricate geometric patterns",
+    "artist_name": "Elder Sarah",
+    "period": "Contemporary",
+    "location": "-35.2809,149.1300",
+    "location_notes": "Canberra region",
+    "location_sensitive": false,
+    "condition_note": "Excellent condition",
+    "image_url": "https://picsum.photos/seed/art2/800/600",
+    "user_id": 2,
+    "status": "approved",
+    "created_at": "2025-01-06 15:00:00"
+  },
+  {
+    "id": 3,
+    "title": "Woven Textile Art",
+    "type": "Textile",
+    "description": "Traditional weaving techniques passed down through generations",
+    "artist_name": "Community Group",
+    "period": "Modern",
+    "location": "-37.8136,144.9631",
+    "location_notes": "Melbourne area",
+    "location_sensitive": true,
+    "condition_note": "Good condition",
+    "image_url": "https://picsum.photos/seed/art3/800/600",
+    "user_id": 3,
+    "status": "approved",
+    "created_at": "2025-01-07 16:00:00"
+  }
+]

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Indigenous Art Atlas - Art Detail</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="page-container">
+        <header class="main-header">
+            <div class="container">
+                <a href="index.html" class="logo">LOGO</a>
+                <nav class="main-nav">
+                    <a href="index.html">Home</a>
+                    <a href="#">Usage Guidelines</a>
+                    <a href="#">Contact</a>
+                    <a href="collection.html">Art</a>
+                    <a href="#">About us</a>
+                    <a href="login.html">Signin/Signup</a>
+                </nav>
+                <button class="btn btn-secondary">Search</button>
+            </div>
+        </header>
+
+        <main class="flex-grow">
+            <div class="container page-content">
+                <div class="art-detail-grid">
+                    <div>
+                        <h1 class="art-detail-title" id="art-title">Loading...</h1>
+                        <div class="art-detail-item"><h2>Type:</h2><p class="detail-type" id="art-type">Loading...</p></div>
+                        <div class="art-detail-item"><h2>Estimated Period:</h2><p class="detail-period" id="art-period">Loading...</p></div>
+                        <div class="art-detail-item"><h2>Artist Name:</h2><p class="detail-artist" id="art-artist">Loading...</p></div>
+                        <div class="art-detail-item"><h2>Location:</h2><p class="detail-location" id="art-location">Loading...</p></div>
+                        <div class="art-detail-item"><h2>Description:</h2><p class="detail-description" id="art-description">Loading...</p></div>
+                        <div class="art-detail-item"><h2>Condition Note:</h2><p class="detail-condition" id="art-condition">Loading...</p></div>
+                    </div>
+                    <div class="art-detail-image-container">
+                        <img src="/placeholder.svg" alt="Artwork" class="art-detail-image" id="art-image"/>
+                    </div>
+                </div>
+                
+                <div class="divider"></div>
+                
+                <section>
+                    <h2 class="section-title">Similar Collection</h2>
+                    <div class="art-grid md-grid-cols-3" id="similar-artworks">
+                        <div class="loading-message">Loading similar artworks...</div>
+                    </div>
+                    <div class="text-center mt-12">
+                        <button class="btn btn-secondary btn-icon">
+                            <span>View More</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                        </button>
+                    </div>
+                </section>
+            </div>
+        </main>
+        
+        <footer class="main-footer">
+            <div class="container">
+                <div><h2 class="footer-title">Indigenous Art Atlas</h2></div>
+                <div class="footer-links">
+                  <h3 class="footer-links-title">Links</h3>
+                  <a href="#">About Us</a>
+                  <a href="#">Usage Guideline</a>
+                  <a href="#">Contact</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>

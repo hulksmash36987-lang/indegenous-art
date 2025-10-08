@@ -1,107 +1,55 @@
-const API_URL = "api"
-
-function getToken() {
-  return localStorage.getItem("token")
-}
-
-function getUser() {
-  const userStr = localStorage.getItem("user")
-  return userStr ? JSON.parse(userStr) : null
-}
-
-function checkAuth() {
-  return getToken() !== null
-}
-
-function logout() {
-  const token = getToken()
-
-  if (token) {
-    fetch(`${API_URL}/auth.php?action=logout`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token }),
-    }).catch((err) => console.log("[v0] Logout error:", err))
-  }
-
-  localStorage.removeItem("token")
-  localStorage.removeItem("user")
-
-  // Clear session storage too
-  sessionStorage.clear()
-
-  // Redirect and prevent back button
-  window.location.replace("login.html")
-}
-
-function protectPage(allowedRoles = []) {
-  const user = getUser()
-  const token = getToken()
-
-  if (!token || !user) {
-    window.location.replace("login.html")
-    return false
-  }
-
-  if (allowedRoles.length > 0 && !allowedRoles.includes(user.role)) {
-    alert("You don't have permission to access this page")
-    window.location.replace("index.html")
-    return false
-  }
-
-  return true
-}
-
-function updateAuthLinks() {
-  const authLinksContainer = document.getElementById("auth-links")
-  if (!authLinksContainer) return
-
-  const user = getUser()
-  if (user) {
-    let dashboardLink = "artist.html"
-    if (user.role === "admin") {
-      dashboardLink = "admin.html"
-    }
-
-    authLinksContainer.innerHTML = `
-      <a href="${dashboardLink}">Dashboard</a>
-      <a href="#" id="logout-link">Logout</a>
-    `
-
-    const logoutLink = document.getElementById("logout-link")
-    if (logoutLink) {
-      logoutLink.addEventListener("click", (e) => {
-        e.preventDefault()
-        logout()
-      })
-    }
-  } else {
-    authLinksContainer.innerHTML = '<a href="login.html">Signin/Signup</a>'
-  }
-}
-
-function makeArtCard(art) {
-  const card = document.createElement("div")
-  card.className = "art-card"
-  card.onclick = () => (window.location.href = `detail.html?id=${art.id}`)
-
-  card.innerHTML = `
-        <div class="art-card-image-container">
-            <img src="${art.image_url}" alt="${art.title}" class="art-card-image" />
-        </div>
-        <div class="art-card-text">
-            <h3 class="font-semibold">${art.title}</h3>
-            <p class="text-gray-600">${art.type}</p>
-        </div>
-    `
-  return card
-}
-
-// HOME PAGE
 if (window.location.pathname.includes("index.html") || window.location.pathname === "/") {
   updateAuthLinks()
 
-  fetch(`${API_URL}/artworks.php?action=latest&limit=6`)
+  let map
+  let markers = []
+
+  function initMap() {
+    map = L.map("map").setView([-25.2744, 133.7751], 4)
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      maxZoom: 18,
+    }).addTo(map)
+
+    loadMapArtworks()
+  }
+
+  function loadMapArtworks() {
+    fetchAPI("artworks.php?action=list&page=1")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && data.artworks) {
+          data.artworks.forEach((art) => {
+            if (art.location && !art.location_sensitive) {
+              const coords = art.location.split(",")
+              if (coords.length === 2) {
+                const lat = parseFloat(coords[0])
+                const lng = parseFloat(coords[1])
+
+                if (!isNaN(lat) && !isNaN(lng)) {
+                  const marker = L.marker([lat, lng]).addTo(map)
+                  marker.bindPopup(`
+                    <div style="text-align: center;">
+                      <img src="${art.image_url}" style="width: 100%; max-width: 200px; border-radius: 4px;" />
+                      <h4 style="margin: 8px 0;">${art.title}</h4>
+                      <p style="margin: 4px 0; color: #666;">${art.type}</p>
+                      <a href="detail.html?id=${art.id}" style="color: #2563eb; text-decoration: none;">View Details</a>
+                    </div>
+                  `)
+                  markers.push({ marker, art })
+                }
+              }
+            }
+          })
+        }
+      })
+      .catch((err) => console.log("Error loading map artworks:", err))
+  }
+
+  initMap()
+
+  fetchAPI("artworks.php?action=latest&limit=6")
     .then((res) => res.json())
     .then((data) => {
       const container = document.getElementById("latest-artworks")
@@ -118,7 +66,7 @@ if (window.location.pathname.includes("index.html") || window.location.pathname 
       }
     })
     .catch((err) => {
-      console.log("[v0] Error loading artworks:", err)
+      console.log("Error loading artworks:", err)
       const container = document.getElementById("latest-artworks")
       if (container) {
         container.innerHTML = '<div class="error-message">Failed to load artworks.</div>'
@@ -127,7 +75,6 @@ if (window.location.pathname.includes("index.html") || window.location.pathname 
 }
 
 if (window.location.pathname.includes("login.html")) {
-  // Redirect if already logged in
   if (checkAuth()) {
     const user = getUser()
     if (user.role === "admin") {
@@ -147,9 +94,8 @@ if (window.location.pathname.includes("login.html")) {
     const password = document.getElementById("password").value
     const errorDiv = document.getElementById("login-error")
 
-    fetch(`${API_URL}/auth.php?action=login`, {
+    fetchAPI("auth.php?action=login", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     })
       .then((res) => res.json())
@@ -171,7 +117,7 @@ if (window.location.pathname.includes("login.html")) {
         }
       })
       .catch((err) => {
-        console.log("[v0] Login error:", err)
+        console.log("Login error:", err)
         errorDiv.textContent = "Login failed. Please try again."
         errorDiv.style.display = "block"
       })
@@ -179,7 +125,6 @@ if (window.location.pathname.includes("login.html")) {
 }
 
 if (window.location.pathname.includes("signup.html")) {
-  // Redirect if already logged in
   if (checkAuth()) {
     window.location.replace("index.html")
   }
@@ -207,9 +152,8 @@ if (window.location.pathname.includes("signup.html")) {
       return
     }
 
-    fetch(`${API_URL}/auth.php?action=register`, {
+    fetchAPI("auth.php?action=register", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, email, password, account_type }),
     })
       .then((res) => res.json())
@@ -223,14 +167,13 @@ if (window.location.pathname.includes("signup.html")) {
         }
       })
       .catch((err) => {
-        console.log("[v0] Signup error:", err)
+        console.log("Signup error:", err)
         errorDiv.textContent = "Signup failed. Please try again."
         errorDiv.style.display = "block"
       })
   })
 }
 
-// COLLECTION PAGE
 if (window.location.pathname.includes("collection.html")) {
   updateAuthLinks()
 
@@ -267,7 +210,7 @@ if (window.location.pathname.includes("collection.html")) {
       params.append("period", selectedPeriods.join(","))
     }
 
-    fetch(`${API_URL}/artworks.php?${params}`)
+    fetchAPI(`artworks.php?${params}`)
       .then((res) => res.json())
       .then((data) => {
         const container = document.getElementById("artworks-grid")
@@ -282,7 +225,7 @@ if (window.location.pathname.includes("collection.html")) {
         }
       })
       .catch((err) => {
-        console.log("[v0] Error loading artworks:", err)
+        console.log("Error loading artworks:", err)
         document.getElementById("artworks-grid").innerHTML = '<div class="error-message">Failed to load artworks.</div>'
       })
   }
@@ -338,7 +281,6 @@ if (window.location.pathname.includes("collection.html")) {
   }
 }
 
-// DETAIL PAGE
 if (window.location.pathname.includes("detail.html")) {
   updateAuthLinks()
 
@@ -346,7 +288,7 @@ if (window.location.pathname.includes("detail.html")) {
   const artId = params.get("id")
 
   if (artId) {
-    fetch(`${API_URL}/artworks.php?action=detail&id=${artId}`)
+    fetchAPI(`artworks.php?action=detail&id=${artId}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.success) {
@@ -363,10 +305,10 @@ if (window.location.pathname.includes("detail.html")) {
         }
       })
       .catch((err) => {
-        console.log("[v0] Error loading artwork:", err)
+        console.log("Error loading artwork:", err)
       })
 
-    fetch(`${API_URL}/artworks.php?action=similar&id=${artId}&limit=3`)
+    fetchAPI(`artworks.php?action=similar&id=${artId}&limit=3`)
       .then((res) => res.json())
       .then((data) => {
         const container = document.getElementById("similar-artworks")
@@ -381,19 +323,17 @@ if (window.location.pathname.includes("detail.html")) {
         }
       })
       .catch((err) => {
-        console.log("[v0] Error loading similar artworks:", err)
+        console.log("Error loading similar artworks:", err)
       })
   }
 }
 
-// SUBMIT PAGE
 if (window.location.pathname.includes("submit.html")) {
   if (!protectPage(["artist"])) {
-    // stop further code by not executing anything
   } else {
     updateAuthLinks()
 
-    fetch(`${API_URL}/categories.php`)
+    fetchAPI("categories.php")
       .then((res) => res.json())
       .then((data) => {
         if (data.categories) {
@@ -407,7 +347,7 @@ if (window.location.pathname.includes("submit.html")) {
         }
       })
       .catch((err) => {
-        console.log("[v0] Error loading categories:", err)
+        console.log("Error loading categories:", err)
       })
 
     const form = document.getElementById("submit-form")
@@ -430,12 +370,8 @@ if (window.location.pathname.includes("submit.html")) {
         user_id: user.id,
       }
 
-      fetch(`${API_URL}/artworks.php?action=submit`, {
+      fetchAPI("artworks.php?action=submit", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${getToken()}`,
-        },
         body: JSON.stringify(formData),
       })
         .then((res) => res.json())
@@ -449,11 +385,10 @@ if (window.location.pathname.includes("submit.html")) {
           }
         })
         .catch((err) => {
-          console.log("[v0] Submit error:", err)
+          console.log("Submit error:", err)
           document.getElementById("submit-error").textContent = "Submission failed. Please try again."
           document.getElementById("submit-error").style.display = "block"
         })
     })
   }
 }
-

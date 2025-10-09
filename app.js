@@ -1,19 +1,8 @@
 if (window.location.pathname.includes("index.html") || window.location.pathname === "/") {
   updateAuthLinks()
 
-  let map
-  let markers = []
-
-  function initMap() {
-    map = L.map("map").setView([-25.2744, 133.7751], 4)
-
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-      maxZoom: 18,
-    }).addTo(map)
-
-    loadMapArtworks()
-  }
+  const map = createMap("map", -25.2744, 133.7751, 4)
+  const markers = []
 
   function loadMapArtworks() {
     fetchAPI("artworks.php?action=list&page=1")
@@ -28,15 +17,15 @@ if (window.location.pathname.includes("index.html") || window.location.pathname 
                 const lng = parseFloat(coords[1])
 
                 if (!isNaN(lat) && !isNaN(lng)) {
-                  const marker = L.marker([lat, lng]).addTo(map)
-                  marker.bindPopup(`
+                  const popupContent = `
                     <div style="text-align: center;">
                       <img src="${art.image_url}" style="width: 100%; max-width: 200px; border-radius: 4px;" />
                       <h4 style="margin: 8px 0;">${art.title}</h4>
                       <p style="margin: 4px 0; color: #666;">${art.type}</p>
                       <a href="detail.html?id=${art.id}" style="color: #2563eb; text-decoration: none;">View Details</a>
                     </div>
-                  `)
+                  `
+                  const marker = addMarker(map, lat, lng, popupContent)
                   markers.push({ marker, art })
                 }
               }
@@ -47,7 +36,7 @@ if (window.location.pathname.includes("index.html") || window.location.pathname 
       .catch((err) => console.log("Error loading map artworks:", err))
   }
 
-  initMap()
+  loadMapArtworks()
 
   fetchAPI("artworks.php?action=latest&limit=6")
     .then((res) => res.json())
@@ -350,11 +339,24 @@ if (window.location.pathname.includes("submit.html")) {
         console.log("Error loading categories:", err)
       })
 
+    const mapResult = createClickableMap("location-map", -25.2744, 133.7751, 4, function (lat, lng, marker) {
+      document.getElementById("location-lat").value = lat
+      document.getElementById("location-lng").value = lng
+      marker.bindPopup("Selected location: " + lat.toFixed(4) + ", " + lng.toFixed(4)).openPopup()
+    })
+
     const form = document.getElementById("submit-form")
     form.addEventListener("submit", (e) => {
       e.preventDefault()
 
       const user = getUser()
+      const lat = document.getElementById("location-lat").value
+      const lng = document.getElementById("location-lng").value
+
+      if (!lat || !lng) {
+        alert("Please select a location on the map")
+        return
+      }
 
       const formData = {
         title: document.getElementById("title").value,
@@ -362,11 +364,11 @@ if (window.location.pathname.includes("submit.html")) {
         description: document.getElementById("description").value,
         artist_name: document.getElementById("artist").value,
         period: document.getElementById("period").value,
-        location: document.getElementById("location").value,
-        location_notes: document.getElementById("location_notes")?.value || "",
+        location: lat + "," + lng,
+        location_notes: document.getElementById("location-notes").value || "",
         image_url: document.getElementById("image").value,
         location_sensitive: document.getElementById("sensitivity").checked,
-        condition_note: document.getElementById("condition")?.value || "",
+        condition_note: "",
         user_id: user.id,
       }
 

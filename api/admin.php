@@ -4,14 +4,20 @@ require_once 'config.php';
 $method = $_SERVER['REQUEST_METHOD'];
 $action = $_GET['action'] ?? '';
 
-// check if user is admin (simple check)
 function check_admin() {
-    $user_id = $_GET['user_id'] ?? $_POST['user_id'] ?? 0;
-    $users = read_json('users.json');
-    
-    foreach ($users as $user) {
-        if ($user['id'] == $user_id && $user['role'] === 'admin') {
-            return true;
+    $headers = getallheaders();
+    $token = isset($headers['Authorization']) ? str_replace('Bearer ', '', $headers['Authorization']) : null;
+
+    if (!$token) {
+        return false;
+    }
+
+    $sessions = read_json('sessions.json');
+    foreach ($sessions as $session) {
+        if ($session['token'] === $token && $session['expires'] > time()) {
+            if ($session['user']['role'] === 'admin') {
+                return true;
+            }
         }
     }
     return false;

@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Indigenous Art Atlas - Submit Art</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -60,8 +61,10 @@
                     <div class="form-section">
                         <h3 class="form-section-title">Location Details</h3>
                         <div class="space-y-6">
-                            <div class="map-placeholder" style="height: 16rem;">Map Placeholder</div>
-                            <div><label class="form-label">Location Notes</label><input type="text" id="location" class="form-input" required /></div>
+                            <div><label class="form-label">Click on the map to select location</label><div id="location-map" style="height: 400px; width: 100%; border-radius: 8px;"></div></div>
+                            <input type="hidden" id="location-lat" />
+                            <input type="hidden" id="location-lng" />
+                            <div><label class="form-label">Location Notes</label><input type="text" id="location-notes" class="form-input" placeholder="e.g., Near the old bridge" /></div>
                             <div class="flex items-center"><input id="sensitivity" type="checkbox" class="form-checkbox" /><label for="sensitivity" class="ml-2">Culturally sensitive / Private land</label></div>
                         </div>
                     </div>
@@ -91,7 +94,9 @@
             </div>
         </footer>
     </div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="utils.js"></script>
+    <script src="map.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
